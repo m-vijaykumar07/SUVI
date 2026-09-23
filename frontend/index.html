@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUVI - Smart Unified Voice Intelligence</title>
+    <link rel="stylesheet" href="/frontend/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300f3ff'><circle cx='12' cy='12' r='10' stroke='%2300f3ff' stroke-width='2' fill='none'/><circle cx='12' cy='12' r='4' fill='%2300f3ff'/></svg>">
+</head>
+<body>
+
+    <!-- Header HUD -->
+    <header class="hud-header">
+        <div class="brand-section">
+            <div class="brand-logo">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" stroke="#00f3ff" stroke-width="2" fill="none"/>
+                    <circle cx="12" cy="12" r="4" fill="#00f3ff"/>
+                    <path d="M12 2 L12 6 M12 18 L12 22 M2 12 L6 12 M18 12 L22 12" stroke="#00f3ff" stroke-width="2"/>
+                </svg>
+            </div>
+            <div>
+                <div class="brand-title">SUVI // JARVIS</div>
+                <div class="brand-subtitle">SMART UNIFIED VOICE INTELLIGENCE</div>
+            </div>
+        </div>
+
+        <div class="header-status">
+            <div class="status-badge">
+                <span id="systemIndicator" class="indicator"></span>
+                <span>SYSTEM ONLINE</span>
+            </div>
+            <div class="status-badge">
+                <span>SECURITY:</span>
+                <span style="color:var(--accent-green);font-weight:700;">PIN ARMED</span>
+            </div>
+            <div id="hudClock" class="clock-display">00:00:00</div>
+        </div>
+    </header>
+
+    <!-- Main Holographic Grid -->
+    <main class="hud-container">
+
+        <!-- Left Column: System Diagnostics & Telemetry -->
+        <aside class="hud-panel">
+            <div class="panel-header">
+                <span class="panel-title">TELEMETRY & HARDWARE</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent-cyan)">
+                    <path d="M3 3h18v2H3zm0 16h18v2H3zm0-8h18v2H3z"/>
+                </svg>
+            </div>
+
+            <div class="telemetry-list">
+                <!-- CPU -->
+                <div class="telemetry-item">
+                    <div class="telemetry-info">
+                        <span>CPU PROCESSOR LOAD</span>
+                        <span id="cpuPercentText" style="color:var(--accent-cyan)">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="cpuBarFill" class="progress-bar-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- RAM -->
+                <div class="telemetry-item">
+                    <div class="telemetry-info">
+                        <span>MEMORY UTILIZATION</span>
+                        <span id="ramPercentText" style="color:var(--accent-cyan)">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="ramBarFill" class="progress-bar-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- Disk -->
+                <div class="telemetry-item">
+                    <div class="telemetry-info">
+                        <span>STORAGE CAPACITY (C:)</span>
+                        <span id="diskPercentText" style="color:var(--accent-secondary)">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="diskBarFill" class="progress-bar-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- Battery -->
+                <div class="telemetry-item">
+                    <div class="telemetry-info">
+                        <span>POWER CELL (BATTERY)</span>
+                        <span id="battPercentText" style="color:var(--accent-green)">100%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="battBarFill" class="progress-bar-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <!-- Android Device Bridge Status -->
+                <div class="device-card">
+                    <div class="device-card-title">
+                        <span>ANDROID BRIDGE LINK</span>
+                        <span id="androidStatusText" style="color:var(--text-muted)">Scanning...</span>
+                    </div>
+                    <p style="font-size:0.75rem;color:var(--text-muted);line-height:1.3;">
+                        Automates Phone Calls, WhatsApp Dispatch, and App Launches over Wireless ADB.
+                    </p>
+                    <button class="hud-btn" style="width:100%;margin-top:8px;padding:6px;font-size:0.8rem;justify-content:center;" onclick="openModal('androidModal')">
+                        BRIDGE CONTROLS
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Center Column: Futuristic Arc Reactor Core Visualizer -->
+        <section class="hud-panel center-reactor-panel">
+            <div class="reactor-wrapper">
+                <canvas id="reactorCanvas"></canvas>
+                <div class="reactor-status-overlay">
+                    <div id="reactorStateLabel" class="state-label">STANDBY</div>
+                    <div id="reactorStateSub" class="state-subtext">Core Systems Ready</div>
+                </div>
+            </div>
+
+            <!-- Audio Reactive Waveform Bars -->
+            <div id="liveAudioWaves" class="live-audio-waves"></div>
+        </section>
+
+        <!-- Right Column: Command Center & Voice Transcript Feed -->
+        <aside class="hud-panel transcript-panel">
+            <div class="panel-header">
+                <span class="panel-title">VOICE INTELLIGENCE FEED</span>
+                <span style="font-family:var(--font-tech);font-size:0.75rem;color:var(--text-muted);">REAL-TIME NLP</span>
+            </div>
+
+            <div id="transcriptFeed" class="transcript-feed">
+                <div class="chat-bubble suvi">
+                    <div class="bubble-meta">
+                        <span>SUVI CORE</span>
+                        <span class="intent-badge">ONLINE</span>
+                    </div>
+                    <div>Greetings. I am SUVI (Smart Unified Voice Intelligence). Press Spacebar or the microphone below to issue voice commands.</div>
+                </div>
+            </div>
+
+            <!-- Quick Suggestion Action Chips -->
+            <div class="quick-chips-wrapper">
+                <button class="chip-btn" data-cmd="open chrome">Open Chrome</button>
+                <button class="chip-btn" data-cmd="open whatsapp">Open WhatsApp</button>
+                <button class="chip-cmd chip-btn" data-cmd="take a photo">Take Photo</button>
+                <button class="chip-btn" data-cmd="system status">System Status</button>
+                <button class="chip-btn" data-cmd="show my notes">Show Notes</button>
+                <button class="chip-btn" data-cmd="volume up">Volume Up</button>
+                <button class="chip-btn" data-cmd="take screenshot">Screenshot</button>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Bottom Controls HUD Bar -->
+    <footer class="hud-footer">
+        <!-- Microphone Push-To-Talk Toggle -->
+        <button id="micToggleBtn" class="hud-btn mic-toggle-btn" title="Toggle Voice Recognition (Spacebar)">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+            </svg>
+        </button>
+
+        <!-- Command Input Text Bar -->
+        <div class="input-container">
+            <input type="text" id="textCommandInput" class="command-input" placeholder="Say 'Hey SUVI' or type command (e.g. 'call John', 'open spotify', 'write note meeting at 4')...">
+        </div>
+
+        <!-- Quick Access Feature Buttons -->
+        <button class="hud-btn" onclick="openModal('cameraModal')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+            </svg>
+            CAMERA
+        </button>
+
+        <button class="hud-btn" onclick="openModal('notesModal'); loadNotesList();">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+            </svg>
+            NOTES
+        </button>
+
+        <button class="hud-btn" onclick="openModal('callModal')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+            </svg>
+            CALL
+        </button>
+
+        <button class="hud-btn" onclick="openModal('whatsappModal')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.08L2.1 21.9l4.98-1.25C8.5 21.48 10.2 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.57 0-3.04-.42-4.32-1.16l-.31-.18-3.06.77.82-2.98-.2-.33C4.38 14.9 4 13.5 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z"/>
+            </svg>
+            WHATSAPP
+        </button>
+    </footer>
+
+    <!-- Camera Live Recon Modal -->
+    <div id="cameraModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">OPTICAL RECON / CAMERA FEED</div>
+                <button class="modal-close" onclick="closeModal('cameraModal')">&times;</button>
+            </div>
+            <div style="position:relative;width:100%;height:320px;background:#000;border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                <img id="cameraVideoFeed" src="" style="width:100%;height:100%;object-fit:cover;" alt="Camera Stream">
+                <img id="cameraSnapshotPreview" src="" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;" alt="Snapshot">
+            </div>
+            <div style="display:flex;gap:10px;">
+                <button id="takeSnapBtn" class="hud-btn" style="flex:1;justify-content:center;">CAPTURE PHOTO</button>
+                <button class="hud-btn" style="flex:1;justify-content:center;" onclick="document.getElementById('cameraSnapshotPreview').style.display='none'; document.getElementById('cameraVideoFeed').src='/api/camera/stream';">LIVE FEED</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notes & Dictation Modal -->
+    <div id="notesModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">SUVI INTELLIGENCE NOTES</div>
+                <button class="modal-close" onclick="closeModal('notesModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>NEW VOICE DICTATION / NOTE:</label>
+                <div style="display:flex;gap:8px;">
+                    <input type="text" id="newNoteContent" class="form-input" style="flex:1;" placeholder="Type or say 'Write note ...'">
+                    <button class="hud-btn" onclick="createNoteFromForm()">SAVE</button>
+                </div>
+            </div>
+            <div style="border-top:1px solid rgba(0,243,255,0.2);padding-top:10px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                    <span style="font-family:var(--font-tech);color:var(--text-secondary);font-size:0.85rem;">SAVED ENTRIES</span>
+                    <a href="/api/notes/export" target="_blank" style="color:var(--accent-cyan);font-size:0.8rem;text-decoration:none;">EXPORT MARKDOWN</a>
+                </div>
+                <div id="notesListContainer" style="max-height:240px;overflow-y:auto;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phone Call Modal -->
+    <div id="callModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">INITIATE PHONE CALL</div>
+                <button class="modal-close" onclick="closeModal('callModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>PHONE NUMBER / CONTACT:</label>
+                <input type="tel" id="callPhoneNumber" class="form-input" placeholder="+1234567890">
+            </div>
+            <div class="form-group">
+                <label>SECURITY MASTER PIN:</label>
+                <input type="password" id="callPin" class="form-input" placeholder="Default: 1234">
+            </div>
+            <button id="callSubmitBtn" class="hud-btn" style="justify-content:center;margin-top:8px;">DIAL CALL (ANDROID / INTENT)</button>
+        </div>
+    </div>
+
+    <!-- WhatsApp Messaging Modal -->
+    <div id="whatsappModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">SEND WHATSAPP MESSAGE</div>
+                <button class="modal-close" onclick="closeModal('whatsappModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>RECIPIENT (PHONE WITH COUNTRY CODE):</label>
+                <input type="tel" id="waRecipient" class="form-input" placeholder="+919876543210">
+            </div>
+            <div class="form-group">
+                <label>MESSAGE CONTENT:</label>
+                <textarea id="waMessage" class="form-input" rows="3" placeholder="Enter message text..."></textarea>
+            </div>
+            <button id="waSubmitBtn" class="hud-btn" style="justify-content:center;margin-top:8px;">DISPATCH WHATSAPP</button>
+        </div>
+    </div>
+
+    <!-- Android ADB Setup Modal -->
+    <div id="androidModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">ANDROID ADB BRIDGE</div>
+                <button class="modal-close" onclick="closeModal('androidModal')">&times;</button>
+            </div>
+            <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.4;">
+                Connect your Android phone to execute phone calls, WhatsApp messages, and launch apps directly from SUVI.
+            </p>
+            <div class="form-group">
+                <label>WIRELESS ADB IP & PORT (e.g. 192.168.1.105:5555):</label>
+                <div style="display:flex;gap:8px;">
+                    <input type="text" id="androidIpInput" class="form-input" style="flex:1;" placeholder="192.168.1.100:5555">
+                    <button class="hud-btn" onclick="connectAndroid()">CONNECT</button>
+                </div>
+            </div>
+            <div style="background:rgba(0,243,255,0.05);padding:10px;border-radius:4px;font-size:0.8rem;color:var(--text-muted);">
+                <strong>Setup Steps:</strong><br>
+                1. Enable Developer Options & USB Debugging on your Android Phone.<br>
+                2. Connect phone via USB once and run <code>python scripts/android_setup.py</code>.<br>
+                3. Or connect phone & PC to same Wi-Fi and enter the Wireless Debugging IP above!
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/frontend/reactor.js"></script>
+    <script src="/frontend/app.js"></script>
+    <script>
+        async function connectAndroid() {
+            const ip = document.getElementById('androidIpInput').value.trim();
+            if (!ip) return;
+            const res = await fetch('/api/android/connect', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ip_port: ip })
+            });
+            const data = await res.json();
+            alert(data.output || (data.success ? 'Connected!' : data.error));
+            closeModal('androidModal');
+            fetchTelemetry();
+        }
+    </script>
+</body>
+</html>

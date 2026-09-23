@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+env/
+venv/
+ENV/
+
+# SUVI runtime data
+data/audio/*.mp3
+data/audio/*.wav
+data/captures/*.jpg
+data/captures/*.png
+data/suvi.db
+data/suvi.db-journal
+
+# Environment secrets
+.env
+
+# IDE & OS
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
