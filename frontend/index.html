@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SUVI - Smart Unified Voice Intelligence</title>
+    <meta name="theme-color" content="#00f3ff">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="/frontend/manifest.json">
     <link rel="stylesheet" href="/frontend/style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300f3ff'><circle cx='12' cy='12' r='10' stroke='%2300f3ff' stroke-width='2' fill='none'/><circle cx='12' cy='12' r='4' fill='%2300f3ff'/></svg>">
+    <link rel="icon" href="/frontend/icon-192.png">
 </head>
 <body>
 
@@ -34,6 +38,9 @@
                 <span>SECURITY:</span>
                 <span style="color:var(--accent-green);font-weight:700;">PIN ARMED</span>
             </div>
+            <button id="pwaInstallBtn" class="hud-btn" style="display:none;padding:5px 10px;font-size:0.75rem;" onclick="triggerPwaInstall()">
+                📲 INSTALL APP
+            </button>
             <div id="hudClock" class="clock-display">00:00:00</div>
         </div>
     </header>

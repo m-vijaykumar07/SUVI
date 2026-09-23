@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.SUVI" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:statusBarColor">@color/suvi_bg</item>
+        <item name="android:navigationBarColor">@color/suvi_bg</item>
+        <item name="android:windowBackground">@color/suvi_bg</item>
+    </style>
+</resources>

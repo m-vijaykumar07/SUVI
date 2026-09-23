@@ -12,8 +12,13 @@ let analyser = null;
 let micStream = null;
 let currentAudio = null;
 
+let deferredInstallPrompt = null;
+
 // User Config State
 let masterPin = localStorage.getItem('suvi_pin') || '1234';
+
+// Check if running inside native Android WebView container
+const isNativeAndroid = typeof window.AndroidSuvi !== 'undefined';
 
 document.addEventListener('DOMContentLoaded', () => {
     initClock();
@@ -21,9 +26,42 @@ document.addEventListener('DOMContentLoaded', () => {
     initWebSocket();
     initSpeechRecognition();
     initEventListeners();
+    initPwaSupport();
     fetchTelemetry();
     setInterval(fetchTelemetry, 3000);
 });
+
+function initPwaSupport() {
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/frontend/service-worker.js')
+            .then(reg => console.log('SUVI ServiceWorker active:', reg.scope))
+            .catch(err => console.log('ServiceWorker registration error:', err));
+    }
+
+    // Capture install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        const btn = document.getElementById('pwaInstallBtn');
+        if (btn) btn.style.display = 'flex';
+    });
+}
+
+function triggerPwaInstall() {
+    if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                const btn = document.getElementById('pwaInstallBtn');
+                if (btn) btn.style.display = 'none';
+            }
+            deferredInstallPrompt = null;
+        });
+    } else {
+        alert("To install SUVI on your phone: Tap your browser's menu (three dots) -> 'Install App' or 'Add to Home Screen'.");
+    }
+}
 
 // 1. Clock Display
 function initClock() {
@@ -114,6 +152,19 @@ function handleSocketMessage(msg) {
 
 function handleIntentData(intent, data) {
     if (!data) return;
+
+    // Native Android hardware hooks
+    if (isNativeAndroid && window.AndroidSuvi) {
+        window.AndroidSuvi.vibrate(40);
+        if (intent === 'PHONE_CALL' && data.number) {
+            window.AndroidSuvi.makeCall(data.number);
+        } else if (intent === 'WHATSAPP_SEND' && data.recipient) {
+            window.AndroidSuvi.sendWhatsApp(data.recipient, data.message || '');
+        } else if (intent === 'APP_OPEN' && data.app) {
+            window.AndroidSuvi.openApp(data.app);
+        }
+    }
+
     if (intent === 'CAMERA_VIEW') {
         openModal('cameraModal');
         document.getElementById('cameraVideoFeed').src = '/api/camera/stream';
