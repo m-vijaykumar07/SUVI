@@ -1,6 +1,7 @@
 /**
- * SUVI JARVIS Holographic HUD - Main Application Logic
- * Integrates Web Speech Recognition, WebSockets, Web Audio API, and REST Endpoints
+ * SUVI ✦ ಸುವಿ — Smart Unified Voice Intelligence v3.0
+ * Gemini AI Brain · Lady Voice (en-US-JennyNeural) · Wake Word: "Hey Suvi (ಸುವಿ)"
+ * Integrates Web Speech Recognition, WebSockets, Web Audio API, and Gemini REST
  */
 
 let reactorInstance = null;
@@ -28,8 +29,35 @@ document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
     initPwaSupport();
     fetchTelemetry();
+    fetchGeminiStatus();
     setInterval(fetchTelemetry, 3000);
+    setInterval(fetchGeminiStatus, 15000);  // Poll Gemini status every 15s
 });
+
+/** Poll Gemini AI Brain status and update HUD badge */
+async function fetchGeminiStatus() {
+    try {
+        const res = await fetch('/api/ai/status');
+        const data = await res.json();
+        const badge = document.getElementById('geminiStatusBadge');
+        const indicator = document.getElementById('geminiIndicator');
+        const text = document.getElementById('geminiStatusText');
+        if (!badge) return;
+        if (data.ready) {
+            indicator.style.background = '#00f3ff';
+            indicator.style.boxShadow = '0 0 8px #00f3ff';
+            text.textContent = `🧠 GEMINI ${(data.model || 'AI').toUpperCase()}`;
+            badge.title = `Gemini AI Brain ONLINE — ${data.model}`;
+        } else {
+            indicator.style.background = '#ff4444';
+            indicator.style.boxShadow = '0 0 8px #ff4444';
+            text.textContent = '🧠 GEMINI OFFLINE';
+            badge.title = 'Gemini offline — set GEMINI_API_KEY in .env';
+        }
+    } catch (e) {
+        // Server not yet ready — ignore
+    }
+}
 
 function initPwaSupport() {
     // Register Service Worker

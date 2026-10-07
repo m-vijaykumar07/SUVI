@@ -18,6 +18,7 @@ from backend.services.android_bridge import android_bridge
 from backend.services.whatsapp_social_service import whatsapp_social_service
 from backend.services.voice_engine import voice_engine
 from backend.services.intent_engine import intent_engine
+from backend.services.gemini_brain import gemini_brain
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("SUVI")
@@ -75,6 +76,10 @@ class LaunchAppRequest(BaseModel):
 class AndroidConnectRequest(BaseModel):
     ip_port: str
 
+class GeminiChatRequest(BaseModel):
+    message: str
+    voice_enabled: bool = True
+
 # ----------------- Root & HUD Web Page ----------------- #
 
 @app.get("/", response_class=HTMLResponse)
@@ -102,7 +107,31 @@ async def get_system_status():
             "adb_ready": android_bridge.is_adb_ready(),
             "devices": android_devs,
             "battery": android_batt
+        },
+        "ai_brain": {
+            "provider": "Gemini",
+            "model": settings.GEMINI_MODEL,
+            "ready": gemini_brain.is_ready,
+            "status": "online" if gemini_brain.is_ready else "offline — configure GEMINI_API_KEY in .env"
         }
+    }
+
+@app.post("/api/ai/clear-memory")
+async def clear_ai_memory():
+    """Clear Gemini AI multi-turn conversation memory."""
+    gemini_brain.clear_memory()
+    return {"success": True, "message": "Gemini AI conversation memory cleared."}
+
+@app.get("/api/ai/status")
+async def get_ai_status():
+    """Get Gemini AI Brain status and configuration."""
+    return {
+        "provider": "Google Gemini",
+        "model": settings.GEMINI_MODEL,
+        "ready": gemini_brain.is_ready,
+        "api_key_set": bool(settings.GEMINI_API_KEY),
+        "max_history": settings.GEMINI_MAX_HISTORY,
+        "get_api_key_url": "https://aistudio.google.com/apikey"
     }
 
 @app.post("/api/command")

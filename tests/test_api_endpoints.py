@@ -11,8 +11,8 @@ client = TestClient(app)
 def test_frontend_index():
     response = client.get("/")
     assert response.status_code == 200
-    assert "SUVI // JARVIS" in response.text
-    print("[+] GET / (JARVIS HUD) returns 200 OK")
+    assert "SUVI //" in response.text
+    print("[+] GET / (Holographic HUD) returns 200 OK")
 
 def test_status_endpoint():
     response = client.get("/api/status")

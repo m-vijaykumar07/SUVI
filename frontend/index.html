@@ -24,8 +24,8 @@
                 </svg>
             </div>
             <div>
-                <div class="brand-title">SUVI // JARVIS</div>
-                <div class="brand-subtitle">SMART UNIFIED VOICE INTELLIGENCE</div>
+                <div class="brand-title">SUVI // ಸುವಿ</div>
+                <div class="brand-subtitle">SMART UNIFIED VOICE INTELLIGENCE · GEMINI AI POWERED</div>
             </div>
         </div>
 
@@ -33,6 +33,13 @@
             <div class="status-badge">
                 <span id="systemIndicator" class="indicator"></span>
                 <span>SYSTEM ONLINE</span>
+            </div>
+            <div class="status-badge" id="geminiStatusBadge" title="Gemini AI Brain Status">
+                <span id="geminiIndicator" class="indicator" style="background:var(--accent-cyan);animation:pulse 1.5s infinite;"></span>
+                <span id="geminiStatusText">🧠 GEMINI AI</span>
+            </div>
+            <div class="status-badge" style="color:var(--accent-green);" title="Voice: en-US-JennyNeural (Lady)">
+                <span>🎙️ LADY VOICE</span>
             </div>
             <div class="status-badge">
                 <span>SECURITY:</span>
@@ -142,15 +149,16 @@
             <div id="transcriptFeed" class="transcript-feed">
                 <div class="chat-bubble suvi">
                     <div class="bubble-meta">
-                        <span>SUVI CORE</span>
-                        <span class="intent-badge">ONLINE</span>
+                        <span>SUVI ✦ ಸುವಿ</span>
+                        <span class="intent-badge">GEMINI AI</span>
                     </div>
-                    <div>Greetings. I am SUVI (Smart Unified Voice Intelligence). Press Spacebar or the microphone below to issue voice commands.</div>
+                    <div>Hello! I'm Suvi (ಸುವಿ), your AI assistant powered by Google Gemini. Say <strong>"Hey Suvi"</strong> or press Space to give voice commands. I can open apps, make calls, send WhatsApp messages, take notes, and much more!</div>
                 </div>
             </div>
 
             <!-- Quick Suggestion Action Chips -->
             <div class="quick-chips-wrapper">
+                <button class="chip-btn" data-cmd="hey suvi">Hey Suvi 👋</button>
                 <button class="chip-btn" data-cmd="open chrome">Open Chrome</button>
                 <button class="chip-btn" data-cmd="open whatsapp">Open WhatsApp</button>
                 <button class="chip-cmd chip-btn" data-cmd="take a photo">Take Photo</button>
@@ -158,6 +166,7 @@
                 <button class="chip-btn" data-cmd="show my notes">Show Notes</button>
                 <button class="chip-btn" data-cmd="volume up">Volume Up</button>
                 <button class="chip-btn" data-cmd="take screenshot">Screenshot</button>
+                <button class="chip-btn" data-cmd="gemini status">AI Status</button>
             </div>
         </aside>
     </main>
@@ -174,7 +183,7 @@
 
         <!-- Command Input Text Bar -->
         <div class="input-container">
-            <input type="text" id="textCommandInput" class="command-input" placeholder="Say 'Hey SUVI' or type command (e.g. 'call John', 'open spotify', 'write note meeting at 4')...">
+            <input type="text" id="textCommandInput" class="command-input" placeholder="Say 'Hey Suvi' (ಸುವಿ) or type a command — e.g. 'call John', 'open Spotify', 'write note meeting at 4pm'...">
         </div>
 
         <!-- Quick Access Feature Buttons -->
